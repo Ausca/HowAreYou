@@ -53,8 +53,8 @@ func convDate(date: Date) -> String {
     return date.string(format: format);
 }
 func getImage(value: Float) -> String {
-    let toInt: Int = Int(value)
-    return "test_" + String(toInt%20);
+    let toInt: Int = Int(value)+10
+    return "frame_" + String(toInt);
 }
 struct ContentView: View {
 
@@ -67,25 +67,26 @@ struct ContentView: View {
                    self.progress = getValueByDate(date: newDate)
                }
                .padding()
-           Image(getImage(value: progress)).resizable()
-               .scaledToFit()
+          // Image(getImage(value: progress)).resizable()
+//               .scaledToFit()
            //Text(convDate(date: date))
+           Spacer()
                Slider(value: Binding(get: {
                    self.progress
                }, set: { (newVal) in
                    self.progress = newVal
                    self.sliderChanged()
-               }), in: 1...100) {
-                   Text("Slider")
+               }), in: 0...100) {
+                   Text("Slider").foregroundColor(.white)
                } minimumValueLabel: {
-                   Text("0")
+                   Text("0").foregroundColor(.white)
                } maximumValueLabel: {
-                   Text("100")
+                   Text("100").foregroundColor(.white)
                }
                .padding([.trailing, .top, .leading]).disabled(convDate(date: self.date) != convDate(date: Date()))
                 
-           Text(String(Int(getValueByDate(date: date)))).padding(.bottom)
-       }
+           Text(String(Int(getValueByDate(date: date)))).padding(.bottom).foregroundColor(.white)
+       }.background(Image(getImage(value: progress)).resizable().scaledToFill())
     }
 
     func sliderChanged() {
