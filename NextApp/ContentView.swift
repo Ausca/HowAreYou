@@ -52,27 +52,33 @@ func getValueByDate(date: Date) -> Float {
 func convDate(date: Date) -> String {
     return date.string(format: format);
 }
+func getImage(value: Float) -> String {
+    let toInt: Int = Int(value)
+    return "test_" + String(toInt%20);
+}
 struct ContentView: View {
 
     @State var progress: Float = defaultValue()
     @State var date: Date = Date()
     var body: some View {
        VStack{
-           DatePicker("Pick a date", selection: $date, in:...Date(), displayedComponents: [.date])
+           DatePicker("What day?", selection: $date, in:...Date(), displayedComponents: [.date])
                .onChange(of: date) { newDate in
                    self.progress = getValueByDate(date: newDate)
                }
-               .padding()
-           Text(convDate(date: date))
+               .padding().id(date)
+           Image(getImage(value: progress)).scaledToFit()
+               Spacer()
+           //Text(convDate(date: date))
                Slider(value: Binding(get: {
                    self.progress
                }, set: { (newVal) in
                    self.progress = newVal
                    self.sliderChanged()
                }), in: 1...100)
-               .padding(.all).disabled(convDate(date: self.date) != convDate(date: Date()))
+               .padding().disabled(convDate(date: self.date) != convDate(date: Date()))
             
-            Text(String(getValueByDate(date: date)))
+           // Text(String(getValueByDate(date: date)))
        }
     }
 
