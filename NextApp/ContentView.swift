@@ -62,23 +62,29 @@ struct ContentView: View {
     @State var date: Date = Date()
     var body: some View {
        VStack{
-           DatePicker("What day?", selection: $date, in:...Date(), displayedComponents: [.date])
+           DatePicker("What day?", selection: $date, in:...Date(), displayedComponents: [.date]).id(date)
                .onChange(of: date) { newDate in
                    self.progress = getValueByDate(date: newDate)
                }
-               .padding().id(date)
-           Image(getImage(value: progress)).scaledToFit()
-               Spacer()
+               .padding()
+           Image(getImage(value: progress)).resizable()
+               .scaledToFit()
            //Text(convDate(date: date))
                Slider(value: Binding(get: {
                    self.progress
                }, set: { (newVal) in
                    self.progress = newVal
                    self.sliderChanged()
-               }), in: 1...100)
-               .padding().disabled(convDate(date: self.date) != convDate(date: Date()))
-            
-           // Text(String(getValueByDate(date: date)))
+               }), in: 1...100) {
+                   Text("Slider")
+               } minimumValueLabel: {
+                   Text("0")
+               } maximumValueLabel: {
+                   Text("100")
+               }
+               .padding([.trailing, .top, .leading]).disabled(convDate(date: self.date) != convDate(date: Date()))
+                
+           Text(String(Int(getValueByDate(date: date)))).padding(.bottom)
        }
     }
 
