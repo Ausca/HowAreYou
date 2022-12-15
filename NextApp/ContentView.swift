@@ -47,7 +47,7 @@ func getValueByDate(date: Date) -> Float {
             return datum.value
         }
     }
-    return 0
+    return 50
 }
 func convDate(date: Date) -> String {
     return date.string(format: format);
@@ -58,26 +58,27 @@ struct ContentView: View {
     @State var date: Date = Date()
     var body: some View {
        VStack{
-           DatePicker("Pick a date", selection: $date, in:...Date(), displayedComponents: [.date]).padding()
+           DatePicker("Pick a date", selection: $date, in:...Date(), displayedComponents: [.date])
+               .onChange(of: date) { newDate in
+                   self.progress = getValueByDate(date: newDate)
+               }
+               .padding()
            Text(convDate(date: date))
-           if (convDate(date: date) == convDate(date: Date())) {
-//           if (true) {
-//               self.progress = getValueByDate(date: date)
                Slider(value: Binding(get: {
                    self.progress
                }, set: { (newVal) in
                    self.progress = newVal
                    self.sliderChanged()
                }), in: 1...100)
-               .padding(.all)
-            }
+               .padding(.all).disabled(convDate(date: self.date) != convDate(date: Date()))
+            
             Text(String(getValueByDate(date: date)))
        }
     }
 
     func sliderChanged() {
         print("Slider value changed to \(progress)")
-        let date = convDate(date: Date())
+        let date = convDate(date: date)
         var values = getData()
         if (values.count > 0 && values.last!.date == date) {
             values[values.endIndex-1] = Data(date: date, value: progress)
